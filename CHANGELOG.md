@@ -6,4 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.1]
+### Added
+- `AchievementCriteria::achievementId` method.
+
+## Changed
+- `AchievementsStorageInterface::setAchievementsCompleted` now receive array of `Achievement` objects instead of array of integers.
+
+## [0.9.0]
+### Initial release.
+
 [Unreleased]: https://github.com/tzurbaev/achievements
+[0.9.1]: https://github.com/tzurbaev/achievements/compare/0.9.0...0.9.1
+[0.9.0]: https://github.com/tzurbaev/achievements/releases/tag/0.9.0
