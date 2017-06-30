@@ -35,6 +35,16 @@ class AchievementCriteria
     }
 
     /**
+     * Achievement ID.
+     *
+     * @return mixed|null
+     */
+    public function achievementId()
+    {
+        return $this->data['achievement_id'] ?? null;
+    }
+
+    /**
      * Criteria type.
      *
      * @return string|null

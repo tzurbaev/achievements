@@ -46,8 +46,6 @@ class AchievementCriteriaProgress
      */
     public function getNewValue(int $maxValue, int $changeValue, string $progressType)
     {
-        $newValue = 0;
-
         switch ($progressType) {
             case AchievementCriteriaChange::PROGRESS_SET:
                 $newValue = $changeValue;

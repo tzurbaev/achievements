@@ -115,7 +115,7 @@ class InMemoryStorage implements AchievementsStorageInterface
 
     public function setAchievementsCompleted($owner, array $achievements)
     {
-        foreach ($this->getAchievementsByIds($achievements) as $achievement) {
+        foreach ($achievements as $achievement) {
             /**
              * @var Achievement $achievement
              */

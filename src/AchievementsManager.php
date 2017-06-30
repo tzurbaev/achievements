@@ -167,9 +167,6 @@ class AchievementsManager
      */
     protected function setCriteriaProgress($owner, AchievementCriteria $criteria, Achievement $achievement, int $changeValue, string $progressType)
     {
-        $oldValue = 0;
-        $newValue = 0;
-        $progress = null;
         $maxValue = $criteria->maxValue();
 
         if ($maxValue > 0 && $changeValue > $maxValue) {
@@ -242,7 +239,7 @@ class AchievementsManager
             }
 
             if ($this->isCompletedAchievement($achievement)) {
-                $completedAchievements[] = $achievement->id();
+                $completedAchievements[] = $achievement;
             }
         }
 
