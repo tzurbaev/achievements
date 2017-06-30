@@ -1,0 +1,30 @@
+{
+    "name": "tzurbaev/achievements",
+    "description": "Achievements System",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "tzurbaev",
+            "email": "zurbaev@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.1",
+        "mockery/mockery": "^0.9.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zurbaev\\Achievements\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zurbaev\\Achievements\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable"
+}
