@@ -20,17 +20,24 @@ class AchievementCriteriaProgress
     public $completed = false;
 
     /**
+     * @var array
+     */
+    public $data = [];
+
+    /**
      * AchievementCriteriaProgress constructor.
      *
      * @param int  $value
      * @param bool $changed
      * @param bool $completed
+     * @param array $data = []
      */
-    public function __construct(int $value, bool $changed = false, bool $completed = false)
+    public function __construct(int $value, bool $changed = false, bool $completed = false, array $data = [])
     {
         $this->value = $value;
         $this->changed = $changed;
         $this->completed = $completed;
+        $this->data = $data;
     }
 
     /**
