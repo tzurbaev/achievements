@@ -19,14 +19,21 @@ class AchievementCriteriaChange
     public $progressType = '';
 
     /**
+     * @var array
+     */
+    public $progressData = [];
+
+    /**
      * AchievementCriteriaChange constructor.
      *
      * @param int         $value
      * @param string|null $progressType
+     * @param array $progressData = []
      */
-    public function __construct(int $value, string $progressType = null)
+    public function __construct(int $value, string $progressType = null, array $progressData = [])
     {
         $this->value = $value;
         $this->progressType = $progressType ?? static::PROGRESS_HIGHEST;
+        $this->progressData = $progressData;
     }
 }

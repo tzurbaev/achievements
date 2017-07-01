@@ -112,7 +112,7 @@ class AchievementsManager
                 continue;
             }
 
-            $this->setCriteriaProgress($owner, $criteria, $achievement, $change->value, $change->progressType);
+            $this->setCriteriaProgress($owner, $criteria, $achievement, $change);
             $updatedCriteriasCount++;
         }
 
@@ -160,14 +160,16 @@ class AchievementsManager
      * @param mixed               $owner
      * @param AchievementCriteria $criteria
      * @param Achievement         $achievement
+     * @param AchievementCriteriaChange $change
      * @param int                 $changeValue
      * @param string              $progressType
      *
      * @return bool
      */
-    protected function setCriteriaProgress($owner, AchievementCriteria $criteria, Achievement $achievement, int $changeValue, string $progressType)
+    protected function setCriteriaProgress($owner, AchievementCriteria $criteria, Achievement $achievement, AchievementCriteriaChange $change)
     {
         $maxValue = $criteria->maxValue();
+        $changeValue = $change->value;
 
         if ($maxValue > 0 && $changeValue > $maxValue) {
             $changeValue = $maxValue;
@@ -179,7 +181,7 @@ class AchievementsManager
         } else {
             $progress = $criteria->progress();
             $oldValue = $progress->value;
-            $newValue = $progress->getNewValue($maxValue, $changeValue, $progressType);
+            $newValue = $progress->getNewValue($maxValue, $changeValue, $change->progressType);
 
             if ($oldValue === $newValue) {
                 return false;
@@ -188,6 +190,7 @@ class AchievementsManager
 
         $progress->value = $newValue;
         $progress->changed = true;
+        $progress->data = $change->progressData;
 
         $this->storage->setCriteriaProgressUpdated($owner, $criteria, $achievement, $progress);
 

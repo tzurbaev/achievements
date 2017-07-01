@@ -117,7 +117,8 @@ class AchievementCriteria
         return $this->progress = new AchievementCriteriaProgress(
             $this->data['progress']['value'] ?? 0,
             $this->data['progress']['changed'] ?? false,
-            $this->data['progress']['completed'] ?? false
+            $this->data['progress']['completed'] ?? false,
+            $this->data['progress']['data'] ?? []
         );
     }
 
