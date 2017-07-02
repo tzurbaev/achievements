@@ -54,14 +54,14 @@ class AchievementsManagerTest extends TestCase
 
         $manager = new AchievementsManager($storage);
 
-        $result = $manager->updateAchievementCriteria('owner', 'example');
+        $result = $manager->updateAchievementCriterias('owner', 'example');
         $this->assertSame(2, $result);
     }
 
     public function testCriteriaHandlerShouldBeCalled()
     {
         $criteria = new AchievementCriteria(['type' => 'example']);
-        $achievement = new Achievement();
+        $achievement = new Achievement(['id' => 1]);
 
         $manager = new AchievementsManager(new DummyStorage());
 

@@ -34,7 +34,7 @@ class CompletionTest extends TestCase
             return new AchievementCriteriaChange(1, AchievementCriteriaChange::PROGRESS_ACCUMULATE);
         });
 
-        $result = $manager->updateAchievementCriteria('owner', 'blog.write_posts', [
+        $result = $manager->updateAchievementCriterias('owner', 'blog.write_posts', [
             'category' => 1,
         ]);
 

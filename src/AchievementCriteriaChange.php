@@ -4,8 +4,8 @@ namespace Zurbaev\Achievements;
 
 class AchievementCriteriaChange
 {
-    const PROGRESS_SET = 'set';
     const PROGRESS_ACCUMULATE = 'accumulate';
+    const PROGRESS_SET = 'set';
     const PROGRESS_HIGHEST = 'highest';
 
     /**
@@ -33,7 +33,7 @@ class AchievementCriteriaChange
     public function __construct(int $value, string $progressType = null, array $progressData = [])
     {
         $this->value = $value;
-        $this->progressType = $progressType ?? static::PROGRESS_HIGHEST;
+        $this->progressType = $progressType ?? static::PROGRESS_ACCUMULATE;
         $this->progressData = $progressData;
     }
 }

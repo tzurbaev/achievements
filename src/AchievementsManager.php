@@ -74,11 +74,11 @@ class AchievementsManager
      *
      * @param mixed  $owner
      * @param string $type
-     * @param array  $data
+     * @param mixed  $data = null
      *
      * @return int
      */
-    public function updateAchievementCriteria($owner, string $type, array $data = []): int
+    public function updateAchievementCriterias($owner, string $type, $data = null): int
     {
         $criterias = $this->storage->getOwnerCriteriasByType($owner, $type);
 
@@ -129,11 +129,11 @@ class AchievementsManager
      * @param mixed               $owner
      * @param AchievementCriteria $criteria
      * @param Achievement         $achievement
-     * @param array               $data
+     * @param mixed               $data = null
      *
      * @return AchievementCriteriaChange|null
      */
-    public function getCriteriaChange($owner, AchievementCriteria $criteria, Achievement $achievement, array $data = [])
+    public function getCriteriaChange($owner, AchievementCriteria $criteria, Achievement $achievement, $data = null)
     {
         $handler = static::$handlers[$criteria->type()] ?? null;
 
@@ -161,8 +161,6 @@ class AchievementsManager
      * @param AchievementCriteria $criteria
      * @param Achievement         $achievement
      * @param AchievementCriteriaChange $change
-     * @param int                 $changeValue
-     * @param string              $progressType
      *
      * @return bool
      */

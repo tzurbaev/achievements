@@ -25,7 +25,7 @@ class AchievementsTest extends TestCase
 
     public function testAchievementCriterias()
     {
-        $achievement = new Achievement();
+        $achievement = new Achievement([]);
         $this->assertSame([], $achievement->criterias());
         $this->assertSame([], $achievement->criteriaIds());
 
