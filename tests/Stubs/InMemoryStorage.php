@@ -57,7 +57,7 @@ class InMemoryStorage implements AchievementsStorageInterface
         ];
     }
 
-    public function getOwnerCriteriasByType($owner, string $type)
+    public function getOwnerCriteriasByType($owner, string $type, $data = null)
     {
         return array_filter($this->criterias, function (AchievementCriteria $criteria) use ($type) {
             return $criteria->type() === $type;

@@ -13,10 +13,11 @@ interface AchievementsStorageInterface
      *
      * @param mixed  $owner
      * @param string $type
+     * @param mixed $data = null
      *
      * @return array
      */
-    public function getOwnerCriteriasByType($owner, string $type);
+    public function getOwnerCriteriasByType($owner, string $type, $data = null);
 
     /**
      * Returns list of criterias' achievements.

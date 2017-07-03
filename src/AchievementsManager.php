@@ -80,7 +80,7 @@ class AchievementsManager
      */
     public function updateAchievementCriterias($owner, string $type, $data = null): int
     {
-        $criterias = $this->storage->getOwnerCriteriasByType($owner, $type);
+        $criterias = $this->storage->getOwnerCriteriasByType($owner, $type, $data);
 
         if (!count($criterias)) {
             return 0;

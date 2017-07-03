@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.5] - 2017-07-03
+### Changed
+- `AchievementsStorageInterface::getOwnerCriteriasByType` signature changed to `($owner, string $type, $data = null)`.
+
 ## [0.9.4] - 2017-07-02
 ### Changed
 - `AchievementsManager::updateAchievementCriteria` renamed to `updateAchievementCriterias`;
@@ -35,9 +39,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.9.0] - 2017-06-30
 ### Initial release.
 
-[Unreleased]: https://github.com/tzurbaev/achievements/compare/0.9.4...HEAD
-[0.9.4]: https://github.com/tzurbaev/achievements/compare/0.9.1...0.9.4
-[0.9.3]: https://github.com/tzurbaev/achievements/compare/0.9.1...0.9.3
+[Unreleased]: https://github.com/tzurbaev/achievements/compare/0.9.5...HEAD
+[0.9.5]: https://github.com/tzurbaev/achievements/compare/0.9.4...0.9.5
+[0.9.4]: https://github.com/tzurbaev/achievements/compare/0.9.3...0.9.4
+[0.9.3]: https://github.com/tzurbaev/achievements/compare/0.9.2...0.9.3
 [0.9.2]: https://github.com/tzurbaev/achievements/compare/0.9.1...0.9.2
 [0.9.1]: https://github.com/tzurbaev/achievements/compare/0.9.0...0.9.1
 [0.9.0]: https://github.com/tzurbaev/achievements/releases/tag/0.9.0

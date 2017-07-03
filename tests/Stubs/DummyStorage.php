@@ -9,7 +9,7 @@ use Zurbaev\Achievements\Contracts\AchievementsStorageInterface;
 
 class DummyStorage implements AchievementsStorageInterface
 {
-    public function getOwnerCriteriasByType($owner, string $type)
+    public function getOwnerCriteriasByType($owner, string $type, $data = null)
     {
         //
     }
