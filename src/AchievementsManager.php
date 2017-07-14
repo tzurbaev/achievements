@@ -92,9 +92,7 @@ class AchievementsManager
         $updatedCriteriasCount = 0;
 
         foreach ($criterias as $criteria) {
-            /**
-             * @var AchievementCriteria $criteria
-             */
+            /** @var AchievementCriteria $criteria*/
 
             if ($criteria->completed()) {
                 continue;
@@ -148,7 +146,11 @@ class AchievementsManager
         if ($result instanceof AchievementCriteriaChange) {
             return $result;
         } elseif (is_array($result) && isset($result['value'])) {
-            return new AchievementCriteriaChange($result['value'], $result['progress'] ?? $result['progress_type'] ?? null);
+            return new AchievementCriteriaChange(
+                $result['value'],
+                $result['progress'] ?? $result['progress_type'] ?? null,
+                $result['data'] ?? $result['progress_data'] ?? []
+            );
         }
 
         return null;
@@ -168,22 +170,22 @@ class AchievementsManager
     {
         $maxValue = $criteria->maxValue();
         $changeValue = $change->value;
+        $oldValue = null;
+        $newValue = $changeValue;
+        $progress = new AchievementCriteriaProgress(0, false);
 
         if ($maxValue > 0 && $changeValue > $maxValue) {
             $changeValue = $maxValue;
         }
 
-        if (!$criteria->hasProgress()) {
-            $newValue = $changeValue;
-            $progress = new AchievementCriteriaProgress(0, false);
-        } else {
+        if ($criteria->hasProgress()) {
             $progress = $criteria->progress();
             $oldValue = $progress->value;
             $newValue = $progress->getNewValue($maxValue, $changeValue, $change->progressType);
+        }
 
-            if ($oldValue === $newValue) {
-                return false;
-            }
+        if ($oldValue === $newValue) {
+            return false;
         }
 
         $progress->value = $newValue;
@@ -221,34 +223,19 @@ class AchievementsManager
     protected function checkCompletedAchievements($owner): int
     {
         $achievements = $this->storage->getAchievementsWithProgressFor($owner, $this->achievementsToCheck);
+        $this->achievementsToCheck = [];
 
         if (!count($achievements)) {
-            $this->achievementsToCheck = [];
-
             return 0;
         }
 
-        $completedAchievements = [];
-
-        foreach ($achievements as $achievement) {
-            /**
-             * @var Achievement $achievement
-             */
-
-            if ($achievement->completed()) {
-                continue;
-            }
-
-            if ($this->isCompletedAchievement($achievement)) {
-                $completedAchievements[] = $achievement;
-            }
-        }
+        $completedAchievements = array_filter($achievements, function (Achievement $achievement) {
+            return !$achievement->completed() && $this->isCompletedAchievement($achievement);
+        });
 
         if (count($completedAchievements) > 0) {
             $this->storage->setAchievementsCompleted($owner, $completedAchievements);
         }
-
-        $this->achievementsToCheck = [];
 
         return count($completedAchievements);
     }
@@ -263,11 +250,7 @@ class AchievementsManager
      */
     protected function isCompletedCriteria(AchievementCriteria $criteria, AchievementCriteriaProgress $progress): bool
     {
-        $progress->completed = false;
-
-        if ($progress->value >= $criteria->maxValue()) {
-            $progress->completed = true;
-        }
+        $progress->completed = $progress->value >= $criteria->maxValue();
 
         return $progress->completed;
     }
@@ -281,27 +264,10 @@ class AchievementsManager
      */
     protected function isCompletedAchievement(Achievement $achievement): bool
     {
-        $allCompleted = true;
-        $count = 0;
-        $criteriasCount = count($achievement->criterias());
+        $completedCriterias = array_filter($achievement->criterias(), function (AchievementCriteria $criteria) {
+            return $this->isCompletedCriteria($criteria, $criteria->progress());
+        });
 
-        foreach ($achievement->criterias() as $criteria) {
-            /**
-             * @var AchievementCriteria $criteria
-             */
-
-            if ($this->isCompletedCriteria($criteria, $criteria->progress())) {
-                ++$count;
-            } else {
-                $allCompleted = false;
-                break;
-            }
-
-            if ($count >= $criteriasCount) {
-                return true;
-            }
-        }
-
-        return $allCompleted;
+        return count($achievement->criterias()) === count($completedCriterias);
     }
 }
