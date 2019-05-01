@@ -3,6 +3,8 @@
 namespace Zurbaev\Achievements;
 
 use Zurbaev\Achievements\Contracts\AchievementsStorageInterface;
+use Zurbaev\Achievements\Contracts\CriteriaHandler;
+use Zurbaev\Achievements\Contracts\CriteriaHandlersManager as CriteriaHandlersManagerContract;
 
 class AchievementsManager
 {
@@ -21,49 +23,22 @@ class AchievementsManager
     protected $achievementsToCheck = [];
 
     /**
-     * Criteria handlers.
+     * Criteria handlers manager.
      *
-     * @var array
+     * @var CriteriaHandlersManagerContract
      */
-    protected static $handlers = [];
+    protected $handlers;
 
     /**
      * AchievementsManager constructor.
      *
-     * @param AchievementsStorageInterface $storage
+     * @param AchievementsStorageInterface    $storage
+     * @param CriteriaHandlersManagerContract $handlers
      */
-    public function __construct(AchievementsStorageInterface $storage)
+    public function __construct(AchievementsStorageInterface $storage, CriteriaHandlersManagerContract $handlers)
     {
         $this->storage = $storage;
-    }
-
-    /**
-     * Registers new criteria handler by given type.
-     *
-     * @param string   $type
-     * @param callable $handler
-     */
-    public static function registerHandler(string $type, callable $handler)
-    {
-        static::$handlers[$type] = $handler;
-    }
-
-    /**
-     * Unregisters previously registered criteria handler by given type.
-     *
-     * @param string $type
-     */
-    public static function unregisterHandler(string $type)
-    {
-        unset(static::$handlers[$type]);
-    }
-
-    /**
-     * Unregisters all previously registered criteria handlers.
-     */
-    public static function unregisterAllHandlers()
-    {
-        static::$handlers = [];
+        $this->handlers = $handlers;
     }
 
     /**
@@ -74,7 +49,7 @@ class AchievementsManager
      *
      * @param mixed  $owner
      * @param string $type
-     * @param mixed  $data = null
+     * @param mixed  $data  = null
      *
      * @return int
      */
@@ -127,41 +102,27 @@ class AchievementsManager
      * @param mixed               $owner
      * @param AchievementCriteria $criteria
      * @param Achievement         $achievement
-     * @param mixed               $data = null
+     * @param mixed               $data        = null
      *
      * @return AchievementCriteriaChange|null
      */
     public function getCriteriaChange($owner, AchievementCriteria $criteria, Achievement $achievement, $data = null)
     {
-        $handler = static::$handlers[$criteria->type()] ?? null;
+        $handler = $this->handlers->getHandlerFor($criteria->type());
 
-        if (!is_callable($handler)) {
+        if (!$handler instanceof CriteriaHandler) {
             return null;
         }
 
-        $result = call_user_func_array($handler, [
-            $owner, $criteria, $achievement, $data,
-        ]);
-
-        if ($result instanceof AchievementCriteriaChange) {
-            return $result;
-        } elseif (is_array($result) && isset($result['value'])) {
-            return new AchievementCriteriaChange(
-                $result['value'],
-                $result['progress'] ?? $result['progress_type'] ?? null,
-                $result['data'] ?? $result['progress_data'] ?? []
-            );
-        }
-
-        return null;
+        return $handler->handle($owner, $criteria, $achievement, $data);
     }
 
     /**
      * Updates criteria progress & saves achievement for completeness check (if eligible for).
      *
-     * @param mixed               $owner
-     * @param AchievementCriteria $criteria
-     * @param Achievement         $achievement
+     * @param mixed                     $owner
+     * @param AchievementCriteria       $criteria
+     * @param Achievement               $achievement
      * @param AchievementCriteriaChange $change
      *
      * @return bool
@@ -208,7 +169,9 @@ class AchievementsManager
      */
     protected function completedCriteriaFor(Achievement $achievement)
     {
-        $this->achievementsToCheck[] = $achievement->id();
+        if (!in_array($achievement->id(), $this->achievementsToCheck)) {
+            $this->achievementsToCheck[] = $achievement->id();
+        }
     }
 
     /**
@@ -225,7 +188,7 @@ class AchievementsManager
         $achievements = $this->storage->getAchievementsWithProgressFor($owner, $this->achievementsToCheck);
         $this->achievementsToCheck = [];
 
-        if (!count($achievements)) {
+        if (!$achievements || !count($achievements)) {
             return 0;
         }
 

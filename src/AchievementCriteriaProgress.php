@@ -27,10 +27,10 @@ class AchievementCriteriaProgress
     /**
      * AchievementCriteriaProgress constructor.
      *
-     * @param int  $value
-     * @param bool $changed
-     * @param bool $completed
-     * @param array $data = []
+     * @param int   $value
+     * @param bool  $changed
+     * @param bool  $completed
+     * @param array $data      = []
      */
     public function __construct(int $value, bool $changed = false, bool $completed = false, array $data = [])
     {

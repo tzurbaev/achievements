@@ -7,19 +7,23 @@ use Zurbaev\Achievements\Achievement;
 use Zurbaev\Achievements\AchievementCriteria;
 use Zurbaev\Achievements\AchievementCriteriaChange;
 use Zurbaev\Achievements\AchievementsManager;
+use Zurbaev\Achievements\Contracts\CriteriaHandlersManager as CriteriaHandlersManagerContract;
+use Zurbaev\Achievements\CriteriaHandlersManager;
+use Zurbaev\Achievements\Tests\Fakes\AchievementHandlers\ExampleHandler;
 use Zurbaev\Achievements\Tests\Stubs\DummyStorage;
 
 class AchievementsManagerTest extends TestCase
 {
-    public function setUp()
+    /** @var CriteriaHandlersManagerContract */
+    protected $criteriasHandler;
+
+    public function setUp(): void
     {
         parent::setUp();
 
-        AchievementsManager::registerHandler('example', function () {
-            $this->assertTrue(true);
-
-            return new AchievementCriteriaChange(10);
-        });
+        $this->criteriasHandler = new CriteriaHandlersManager([
+            'example' => ExampleHandler::class,
+        ]);
     }
 
     public function testCriteriasShouldBeUpdated()
@@ -32,7 +36,7 @@ class AchievementsManagerTest extends TestCase
             new AchievementCriteria([
                 'id' => 'test-second-criteria',
                 'type' => 'example',
-            ])
+            ]),
         ];
         $achievement = new Achievement([
             'id' => 'test-achievement',
@@ -52,7 +56,7 @@ class AchievementsManagerTest extends TestCase
         $storage->shouldReceive('setCriteriaProgressUpdated')->andReturn(true);
         $storage->shouldReceive('setAchievementsCompleted')->andReturn(true);
 
-        $manager = new AchievementsManager($storage);
+        $manager = new AchievementsManager($storage, $this->criteriasHandler);
 
         $result = $manager->updateAchievementCriterias('owner', 'example');
         $this->assertSame(2, $result);
@@ -63,7 +67,7 @@ class AchievementsManagerTest extends TestCase
         $criteria = new AchievementCriteria(['type' => 'example']);
         $achievement = new Achievement(['id' => 1]);
 
-        $manager = new AchievementsManager(new DummyStorage());
+        $manager = new AchievementsManager(new DummyStorage(), $this->criteriasHandler);
 
         $result = $manager->getCriteriaChange('owner', $criteria, $achievement);
         $this->assertInstanceOf(AchievementCriteriaChange::class, $result);

@@ -13,7 +13,7 @@ interface AchievementsStorageInterface
      *
      * @param mixed  $owner
      * @param string $type
-     * @param mixed $data = null
+     * @param mixed  $data  = null
      *
      * @return array
      */

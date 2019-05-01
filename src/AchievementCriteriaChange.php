@@ -28,7 +28,7 @@ class AchievementCriteriaChange
      *
      * @param int         $value
      * @param string|null $progressType
-     * @param array $progressData = []
+     * @param array       $progressData = []
      */
     public function __construct(int $value, string $progressType = null, array $progressData = [])
     {
